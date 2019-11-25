@@ -1,0 +1,42 @@
+class Solution {
+    public Node flatten(Node head) {
+        Node[] nodes = flattenHelper(head);
+        return nodes[0];
+    }
+    
+    private Node[] flattenHelper(Node head) {
+        Node[] nodes = new Node[2];
+        nodes[0] = null;
+        nodes[1] = null;
+        Node last = null;
+        
+        Node node = head;
+        if (node == null) {
+            return nodes;
+        }
+        while (node != null) {
+            while (node != null && node.child == null) {
+                last = node;
+                node = node.next;
+            } 
+            if (node != null && node.child != null) {
+                Node temp = node.next;
+                Node[] temp2 = flattenHelper(node.child);
+                node.next = temp2[0];
+                node.child = null;
+                temp2[0].prev = node;
+                if (temp2[1] != null) {
+                    temp2[1].next = temp;
+                }
+                if (temp != null) {
+                    temp.prev = temp2[1];
+                }
+                node = temp;
+            }
+        }
+            
+        nodes[0] = head;
+        nodes[1] = last;
+        return nodes;
+    }
+}
