@@ -7,12 +7,7 @@ class Solution {
         int min = Integer.MAX_VALUE;
         int secondMin = Integer.MAX_VALUE;
         
-        min = Math.min(nums[0], nums[1]);
-        if (min == nums[0] && nums[0] != nums[1]) {
-            secondMin = nums[1];
-        }
-        
-        for (int i = 2; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (nums[i] > min && nums[i] > secondMin) {
                 return true;
             } else if (nums[i] < min) {
@@ -21,7 +16,6 @@ class Solution {
                 secondMin = nums[i];
             }
         }
-        
         return false;
     }
 }
