@@ -1,0 +1,79 @@
+class Solution {
+    public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edges) {
+        int[][] graph = new int[n][n];
+        build_graph(graph, n, red_edges, blue_edges);
+        
+        
+        // for(int i = 0; i < n; i++) {
+        //     for (int j = 0; j < n; j++) {
+        //         System.out.print(graph[i][j] + "\t");
+        //     }
+        //     System.out.println();
+        // }
+        
+        Queue<int[] > queue = new LinkedList<>();
+        queue.offer(new int[]{0, 1});
+        queue.offer(new int[]{0, -1});
+        
+        int len = 0; // for finding the distance
+        int[] res = new int[n];
+        Arrays.fill(res, Integer.MAX_VALUE);
+        res[0] = 0;
+        
+        Set<String> visited = new HashSet<>();
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            len++;
+            
+            for (int i = 0; i < size; i++) {
+                int[] curr = queue.poll();
+                int node = curr[0];
+                int color = curr[1];
+                int oppColor = -color;
+                
+                for (int j = 1; j < n; j++) {
+                    if (graph[node][j] == oppColor || graph[node][j] == 0) {
+                        if (visited.contains(j + "" + oppColor)) {
+                            continue;
+                        }
+                        visited.add(j + "" + oppColor);
+                        queue.offer(new int[]{j, oppColor});
+                        res[j] = Math.min(res[j], len);
+                    }
+                }
+            }
+        }
+        
+        for (int i = 1; i < n; i++) {
+             if (res[i] == Integer.MAX_VALUE) {
+                res[i] = -1;
+            }
+        }
+        
+        return res;
+    }
+    
+    private void build_graph(int[][] graph, int n, int[][] red_edges, int[][] blue_edges) {
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(graph[i], -n);
+        }
+        
+        for (int[] red : red_edges) {
+            int from = red[0];
+            int to = red[1];
+            
+            graph[from][to] = 1;
+        }
+        
+        for (int[] blue : blue_edges) {
+            int from = blue[0];
+            int to = blue[1];
+            
+            if (graph[from][to] == 1) {
+                graph[from][to] = 0;
+            } else {
+                graph[from][to] = -1;
+            }
+        }
+    }
+}
